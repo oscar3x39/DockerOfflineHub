@@ -1,5 +1,11 @@
 # dockerhub
 
+## quick start
+```
+docker-compose up --d
+```
+
+## how it work
 ```
 $ docker pull mcr.microsoft.com/playwright
 $ docker image ls

@@ -1,32 +1,75 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/gin-gonic/gin"
+	"os/exec"
+	"fmt"
+	"bytes"
+	"regexp"
 )
 
-func handler(c *gin.Context) {
+func requestHandle(c *gin.Context) {
 	var m map[string]interface{}
 	err := c.Bind(&m)
 	if err != nil {
 		return
 	}
 
-	// cmd := exec.Command("docker", "pull", "")
-	// err := cmd.Run()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	if m["name"] == nil {
+		handler(c, "false")
+		return
+	}
 
-	fmt.Printf("%v\n", m)
+	name := fmt.Sprintf("%v", m["name"])
+	re := regexp.MustCompile(`^[a-z0-9\.\/]*$`).FindString(name)
+	if (name != re) {
+		handler(c, "false")
+		return
+	}
+
+	fmt.Println("pulling docker image from " + name)
+	if dockerPullImage(name) {
+		if dockerSaveImage(name) {
+			handler(c, "true")
+		}
+	}
+
+	handler(c, "false")
+	return
+}
+
+func commandExecute(args ...string) bool {
+	cmd := exec.Command("docker", args...)
+	var out bytes.Buffer
+	var stderr bytes.Buffer
+	cmd.Stdout = &out
+	cmd.Stderr = &stderr
+	err := cmd.Run()
+	if err != nil {
+		fmt.Println(fmt.Sprint(err) + ": " + stderr.String())
+	}
+	fmt.Println("Result: " + out.String())
+	return true
+}
+
+func dockerSaveImage(name string) bool {
+	cmd := []string{"save", name, "images/" + name}
+	return commandExecute(cmd...)
+}
+
+func dockerPullImage(name string) bool {
+	cmd := []string{"pull", name}
+	return commandExecute(cmd...)
+}
+
+func handler(c *gin.Context, msg string) {
 	c.JSON(200, gin.H{
-		"success": true,
+		"success": msg,
 	})
 }
 
 func main() {
 	r := gin.Default()
-	r.POST("/cmd", handler)
-	r.Run()
+	r.POST("/pull", requestHandle)
+	r.Run(":8011")
 }

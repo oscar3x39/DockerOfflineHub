@@ -1,5 +1,3 @@
-# dockerhub
-
 ## quick start
 ```
 docker-compose up --d

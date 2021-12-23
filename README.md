@@ -1,6 +1,6 @@
 ## quick start
 ```
-docker-compose up --d
+$ docker-compose up --d
 ```
 
 ## how it work

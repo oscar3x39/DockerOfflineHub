@@ -9,8 +9,19 @@ services:
       container_name: nginx
       ports:
           - "8080:80"
-      volumes:
-          - ./api/images:/var/www/html
+      volumes: 
+          - ./public:/var/www/html
           - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       networks:
           - lan
+  goapi:
+    build:
+      context: dockerfiles
+      dockerfile: golang
+    container_name: goapi
+    networks:
+      - lan
+    volumes:
+      - ./backend:/code
+    working_dir: /code
+    entrypoint: go run main.go

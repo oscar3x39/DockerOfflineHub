@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
-	"os/exec"
-	"fmt"
 	"bytes"
+	"fmt"
+	"os/exec"
 	"regexp"
+
+	"github.com/gin-gonic/gin"
 )
 
 func requestHandle(c *gin.Context) {
@@ -22,7 +23,7 @@ func requestHandle(c *gin.Context) {
 
 	name := fmt.Sprintf("%v", m["name"])
 	re := regexp.MustCompile(`^[a-z0-9\.\/]*$`).FindString(name)
-	if (name != re) {
+	if name != re {
 		handler(c, "false")
 		return
 	}
@@ -71,5 +72,5 @@ func handler(c *gin.Context, msg string) {
 func main() {
 	r := gin.Default()
 	r.POST("/pull", requestHandle)
-	r.Run(":8011")
+	r.Run(":80")
 }

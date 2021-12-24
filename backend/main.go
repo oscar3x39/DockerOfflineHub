@@ -36,7 +36,6 @@ func requestHandle(c *gin.Context) {
 	}
 
 	handler(c, "false")
-	return
 }
 
 func commandExecute(args ...string) bool {
@@ -54,7 +53,7 @@ func commandExecute(args ...string) bool {
 }
 
 func dockerSaveImage(name string) bool {
-	cmd := []string{"save", name, "images/" + name}
+	cmd := []string{"save", name, "../public/" + name}
 	return commandExecute(cmd...)
 }
 

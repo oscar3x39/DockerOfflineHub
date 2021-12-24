@@ -1,4 +1,7 @@
-.PHONY: up down
+.PHONY: up down restart logs
+
+restart:
+	docker-compose restart
 
 up:
 	docker-compose up -d --remove-orphans

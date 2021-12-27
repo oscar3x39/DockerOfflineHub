@@ -1,11 +1,11 @@
 ## quick start
 ```
-$ docker-compose up --d
+$ make up # docker-compose up --d
 ```
 
 ## how it work
 ```
 $ docker pull mcr.microsoft.com/playwright
-$ docker save mcr.microsoft.com/playwright playwright.tar
-$ docker load < playwright.tar
+$ docker save --output public/files/nginx.tar nginx
+$ docker load < nginx.tar
 ```

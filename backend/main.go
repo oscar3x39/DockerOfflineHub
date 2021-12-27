@@ -54,7 +54,7 @@ func commandExecute(args ...string) bool {
 }
 
 func dockerSaveImage(name string) bool {
-	cmd := []string{"save", name, "../public/files/" + name}
+	cmd := []string{"save", "--output", "public/files/" + name + ".tar", name}
 	return commandExecute(cmd...)
 }
 

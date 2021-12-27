@@ -32,6 +32,7 @@ func requestHandle(c *gin.Context) {
 	if dockerPullImage(name) {
 		if dockerSaveImage(name) {
 			handler(c, "true")
+			return
 		}
 	}
 
@@ -53,7 +54,7 @@ func commandExecute(args ...string) bool {
 }
 
 func dockerSaveImage(name string) bool {
-	cmd := []string{"save", name, "../public/" + name}
+	cmd := []string{"save", name, "../public/files/" + name}
 	return commandExecute(cmd...)
 }
 
@@ -70,6 +71,6 @@ func handler(c *gin.Context, msg string) {
 
 func main() {
 	r := gin.Default()
-	r.POST("/pull", requestHandle)
+	r.POST("/api/pull", requestHandle)
 	r.Run(":80")
 }
